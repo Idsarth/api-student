@@ -1,0 +1,22 @@
+{
+  "name": "insafe-student",
+  "version": "1.0.0",
+  "description": "InSafe student api rest",
+  "main": "main.ts",
+  "scripts": {
+    "start": "",
+    "dev": "",
+    "test": "",
+    "": ""
+  },
+  "keywords": [
+    "insafe",
+    "apirest",
+    "typescript",
+    "microservices",
+    "docker",
+    "express"
+  ],
+  "author": "Idsarth <idsarthdev19@gmail.com>",
+  "license": "ISC"
+}
