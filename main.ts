@@ -9,8 +9,8 @@ import { Server } from './src/server'
 */
 const main = async ():Promise<void> => {
   const serve = new Server()
-  serve.listen(Number(PORT), Number(HOST), () => {
-    console.log(`Server is listening on port 🧨 ${PORT} http://${HOST}:${PORT}`)
+  serve.listen(Number(PORT), HOST, () => {
+    console.log(`🧨 Server is listening on port ${PORT} http://${HOST}:${PORT}`)
   })
 }
 
