@@ -3,6 +3,9 @@ import { Request, Response, NextFunction, Router } from 'express'
 // Import handlers
 import { AbstractHandler } from '../../handlers/abstract.handler'
 
+// Import middlews
+import { TokenMiddlew } from '../../middlew'
+
 class TechHandler extends AbstractHandler {
   public path:string = '/technology'
   public router:Router = Router()
@@ -10,14 +13,13 @@ class TechHandler extends AbstractHandler {
   constructor() {
     super()
 
-    this.router.get(`${this.path}`, this.getAll)
-    this.router.get(`${this.path}/:id`, this.getById)
-
-    this.router
-      .all(`${this.path}/*`)
-      .put(this.path, this.update)
-      .post(this.path, this.create)
-      .delete(this.path, this.delete)
+    this.router.use(TokenMiddlew.validated)
+      .route(this.path)
+      .get(this.getAll)
+      .put(this.update)
+      .get(this.getById)
+      .post(this.create)
+      .delete(this.delete)
   }
 
   public async getById():Promise<void> {}
