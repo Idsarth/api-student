@@ -5,7 +5,7 @@ import { ITechnology } from '../../interfaces'
 
 interface ITechModel extends ITechnology, Document {}
 
-export const TechSchema = new Schema({
+const TechSchema = new Schema({
   name: {
     type: String,
     unique: true,
@@ -39,5 +39,4 @@ export const TechSchema = new Schema({
   }
 })
 
-const Technology = model<ITechModel>('technology', TechSchema)
-export default Technology
+export const TechnologyModel = model<ITechModel>('technology', TechSchema)

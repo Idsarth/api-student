@@ -1,12 +1,9 @@
 import { IsString } from 'class-validator'
 
-export class TechDto {
+export class CourseDto {
   @IsString()
   public name:string
 
   @IsString()
   public imageUrl:string
-
-  @IsString()
-  public docsUrl:string
 }

@@ -3,9 +3,9 @@ import { model, Schema, Document } from 'mongoose'
 // Import interfaces
 import { ICourse } from '../../interfaces'
 
-interface ICourseModel extends ICourse, Document {}
+export interface ICourseModel extends ICourse, Document {}
 
-export const CourseSchema = new Schema({
+const CourseSchema = new Schema({
   name: {
     type: String,
     unique: true,
@@ -34,5 +34,4 @@ export const CourseSchema = new Schema({
   }
 })
 
-const Course = model<ICourseModel>('course', CourseSchema)
-export default Course
+export const CourseModel = model<ICourseModel>('course', CourseSchema)

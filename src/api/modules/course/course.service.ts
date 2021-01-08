@@ -1,11 +1,11 @@
 // Import model
-import { TechnologyModel } from './tech.model'
+import { CourseModel, ICourseModel } from './course.model'
 
 // Import interfaces
 import {  } from '../../interfaces'
 
 // Import dto
-import { TechDto } from './tech.dto'
+import { CourseDto } from './course.dto'
 
 // Import Exception
 import { HttpException } from '../../exceptions'
@@ -13,17 +13,21 @@ import { HttpException } from '../../exceptions'
 // Import services
 import { HttpStatus } from '../../services/http-status.service'
 
-export class TechService {
-  public tech = TechnologyModel
+export class CourseService {
+  public tech = CourseModel
   
-  public async create(technology: TechDto):Promise<any> {
-    const res = this.tech.findOne({ name: technology.name })
+  public async create(course: CourseDto):Promise<ICourseModel> {
+    const res = this.tech.findOne({ name: course.name })
     if(res) throw new HttpException(HttpStatus.BAD_REQUEST, `the name property must be unique.`)
 
-    const tech = this.tech.create({ ...technology })
+    const model = await this.tech.create({ ...course })
+    const document = await model.save()
+
+    return document
   }
   
   public async find():Promise<any> {
     return 
   }
 }
+

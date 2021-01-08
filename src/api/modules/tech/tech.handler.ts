@@ -23,9 +23,7 @@ class TechHandler extends AbstractHandler {
   }
 
   public async getById():Promise<void> {}
-  public async getAll(req: Request, res:Response, next:NextFunction):Promise<void> {
-    res.status(200).json({ technologies: [] }).end()
-  }
+  public async getAll(req: Request, res:Response, next:NextFunction):Promise<void> {}
   public async create():Promise<void> {}
   public async delete():Promise<void> {}
   public async update():Promise<void> {}
