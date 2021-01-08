@@ -1,4 +1,4 @@
-import { Handler } from './interfaces'
+import { IHandler } from './interfaces'
 import TechHandler from './modules/tech/tech.handler'
 
-export const handlers: Handler[] = [TechHandler]
+export const handlers: IHandler[] = [TechHandler]

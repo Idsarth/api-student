@@ -20,11 +20,14 @@
   "author": "Idsarth <idsarthdev19@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "class-transformer": "^0.3.1",
+    "class-validator": "^0.12.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^4.3.1",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.10"
   },
   "devDependencies": {
     "@types/compression": "^1.7.0",

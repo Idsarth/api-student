@@ -1,1 +1,5 @@
-export { default as Handler } from './handler.interface'
+export { ITechnology } from './tech.interface'
+export { IHandler } from './handler.interface'
+export { ICourse } from './course.interface'
+export { IModel } from './model.interface'
+export { ITask } from './task.interface'

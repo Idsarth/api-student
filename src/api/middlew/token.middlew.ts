@@ -15,7 +15,7 @@ class TokenMiddlew {
         if(authorization[0] !== 'Bearer') {
           throw new UnauthorizedException('not authorized.')
         } else {
-          //req.token = verify(authorization[1], SECRET_KEY)
+          // req.user.token = verify(authorization[1], SECRET_KEY)
           return next()
         }
       } catch (err) {

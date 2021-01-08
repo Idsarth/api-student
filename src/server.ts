@@ -2,6 +2,7 @@ import express, { Application, json, urlencoded } from 'express'
 import compression from 'compression'
 import helmet from 'helmet'
 import path from 'path'
+import cors from 'cors'
 
 // Import handlers
 import { handlers } from './api/routes'
@@ -18,6 +19,7 @@ export class Server {
 
   private middlew(): void {
     this.app.use(json())
+    this.app.use(cors())
     this.app.use(helmet())
     this.app.use(compression())
     this.app.use(urlencoded({ extended: true }))

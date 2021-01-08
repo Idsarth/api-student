@@ -1,8 +1,6 @@
 import { Router } from 'express'
 
-interface Handler {
+export interface IHandler {
   path: string
   router: Router
 }
-
-export default Handler
