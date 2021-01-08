@@ -1,5 +1,5 @@
 export interface IModel {
-  status:string
+  isActive:string
   createdAt:Date
   updatedAt:Date
 }

@@ -20,6 +20,15 @@ export const TechSchema = new Schema({
     required: true,
     unique: true
   },
+  isActive: {
+    type: Boolean,
+    required: true,
+    default: true
+  },
+  courses: [{
+    type: Schema.Types.ObjectId,
+    ref: 'course'
+  }],
   updatedAt: {
     type: Date,
     default: Date.now()
