@@ -9,9 +9,9 @@ export abstract class AbstractHandler implements IHandler {
 
   constructor() {}
 
-  public abstract getAll<T>(req:Request, res:Response, next:NextFunction):Promise<Response<T>>
+  public abstract getAll(req:Request, res:Response, next:NextFunction):Promise<void>
   public abstract getById(req:Request, res:Response, next:NextFunction):Promise<void>
-  public abstract create<T>(req:Request, res:Response, next:NextFunction):Promise<Response<T>>
+  public abstract create(req:Request, res:Response, next:NextFunction):Promise<void>
   public abstract update(req:Request, res:Response, next:NextFunction):Promise<void>
   public abstract delete(req:Request, res:Response, next:NextFunction):Promise<void>
 }

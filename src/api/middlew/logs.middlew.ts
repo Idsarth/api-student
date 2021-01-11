@@ -44,4 +44,4 @@ class Log {
   }
 }
 
-export default new Log
+export default new Log()
