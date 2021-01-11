@@ -11,5 +11,8 @@ config({ path: path.join(process.cwd(), `.env${process.env.NODE_ENV !== 'product
  export const PORT = process.env.PORT as string
 
  export const SECRET_KEY = process.env.SECRET_KEY as string
- export const MONGO_URI = process.env.MONGO_URI as string
+ export const MONGO_DATABASE = process.env.MONGO_DATABASE as string
+ export const MONGO_HOST = process.env.MONGO_HOST as string
+ export const MONGO_USER = process.env.MONGO_USER as string
+ export const MONGO_PASSWORD = process.env.MONGO_PASSWORD as string
  export const REDIS_URI = process.env.REDIS_URI as string

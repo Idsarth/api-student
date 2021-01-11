@@ -10,7 +10,7 @@ import { Mongoose } from './src/api/database/mongoose'
 const serve = new Server()
 const mongo = new Mongoose()
 const main = async ():Promise<void> => {
-  mongo.connect()
+  await mongo.connect()
   serve.listen(Number(PORT), HOST, () => {
     console.log(`🧨 Server is listening on port ${PORT} http://${HOST}:${PORT}`)
   })

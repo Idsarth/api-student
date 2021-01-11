@@ -7,6 +7,9 @@ import cors from 'cors'
 // Import handlers
 import { handlers } from './api/routes'
 
+// Import middlew
+import { ErrorMiddlew } from './api/middlew'
+
 export class Server {
   public app: Application
 
@@ -15,6 +18,7 @@ export class Server {
 
     this.middlew()
     this.handlers()
+    this.errHandler()
   }
 
   private middlew(): void {
@@ -25,7 +29,10 @@ export class Server {
     this.app.use(urlencoded({ extended: true }))
     this.app.use(express.static(path.join(__dirname, './public')))
   }
-
+  
+  private errHandler():void {
+    this.app.use(ErrorMiddlew.error)
+  }
 
   private handlers():void {
     handlers.forEach(handler => {
