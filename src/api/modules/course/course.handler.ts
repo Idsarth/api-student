@@ -35,7 +35,7 @@ class CourseHandler extends AbstractHandler {
 
   public async getAll(req:Request, res:Response, next:NextFunction):Promise<void> {
     try {
-      const courses = await CourseModel.find().select('-__v')
+      const courses = await CourseModel.find().select('-__v').populate('tasks', '-__v')
       const response:IResponse = {
         data: courses,
         status: {
@@ -58,7 +58,7 @@ class CourseHandler extends AbstractHandler {
     const courseId:string = req.query.courseId as string
     try {
       if(isValidObjectId(courseId)) {
-        const course = await CourseModel.findById({ _id: Types.ObjectId(courseId)}).select('-__v')
+        const course = await CourseModel.findById({ _id: Types.ObjectId(courseId)}).select('-__v').populate('tasks', '-__v')
         if(!course) {
           next(new NotFoundException('course not found.'))
         } else {
@@ -77,7 +77,7 @@ class CourseHandler extends AbstractHandler {
           res.status(HttpStatus.OK).json(response)
         }
       } else {
-        next(new HttpException(HttpStatus.BAD_REQUEST, 'the params courseId is not valid.'))
+        next(new HttpException(HttpStatus.BAD_REQUEST, 'the param courseId is not valid.'))
       }
     } catch (error) {
       next(new InternalServerError('internal server error.'))
@@ -86,7 +86,7 @@ class CourseHandler extends AbstractHandler {
   public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
     const course: CourseDto = req.body
     try {
-      const check = CourseModel.findOne({ name: course.name })
+      const check = await CourseModel.findOne({ name: course.name })
       if(check) next(new HttpException(HttpStatus.BAD_REQUEST, `the name property must be unique.`))
       else {
         const model = await CourseModel.create({ ...course })

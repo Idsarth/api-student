@@ -5,7 +5,7 @@ import { ITask } from '../../interfaces'
 
 interface ITaskModel extends ITask, Document {}
 
-export const TaskSchema = new Schema({
+const TaskSchema = new Schema({
   name: {
     type: String,
     unique: true,
@@ -43,5 +43,4 @@ export const TaskSchema = new Schema({
   }
 })
 
-const Task = model<ITaskModel>('task', TaskSchema)
-export default Task
+export const TaskModel = model<ITaskModel>('task', TaskSchema)
