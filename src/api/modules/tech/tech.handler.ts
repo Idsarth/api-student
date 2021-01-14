@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express'
+import { isValidObjectId, Types } from 'mongoose'
 
 // Import exceptions
 import { HttpException, InternalServerError } from '../../exceptions'
@@ -26,7 +27,7 @@ class TechHandler extends AbstractHandler {
 
     this.router.post(this.path, this.create)
     this.router.get(this.path, this.getById)
-    this.router.get(`${this.path}s`, this.getAll)
+    this.router.get(`/technologies`, this.getAll)
   }
 
   public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
@@ -56,8 +57,59 @@ class TechHandler extends AbstractHandler {
       next(new InternalServerError('internal server error.'))
     }
   }
-  public async getAll(req: Request, res:Response, next:NextFunction):Promise<void> {}
-  public async getById():Promise<void> {}
+  public async getAll(req: Request, res:Response, next:NextFunction):Promise<void> {
+    try {
+      const techs = await TechModel.find()
+        .populate({
+          path: 'courses',
+          populate: {
+            path: 'tasks'
+          }
+        })
+        .select('-__v')
+      
+      const response:IResponse = {
+        data: techs,
+        status: {
+          ok: true,
+          code: HttpStatus.OK,
+          message: 'list of technologies gated successfully.'
+        },
+        info: {
+          url: req.url,
+          datetime: new Date(Date.now()).toLocaleString()
+        }
+      }
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(new InternalServerError('internal server error'))
+    }
+  }
+  public async getById(req:Request, res:Response, next:NextFunction):Promise<void> {
+    const techId:string = req.query.techId as string
+    if(!isValidObjectId(techId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param techId is not valid.'))
+    const tech = await TechModel.findById({ _id: Types.ObjectId(techId) })
+      .populate({
+        path: 'courses',
+        populate: {
+          path: 'tasks'
+        }
+      })
+      .select('-__v')
+    const response:IResponse = {
+      data: tech,
+      status: {
+        ok: true,
+        code: HttpStatus.OK,
+        message: 'tech found successfully'
+      },
+      info: {
+        url: req.url,
+        datetime: new Date(Date.now()).toLocaleString()
+      }
+    }
+    res.status(HttpStatus.OK).json(response)
+  }
   public async delete():Promise<void> {}
   public async update():Promise<void> {}
 }

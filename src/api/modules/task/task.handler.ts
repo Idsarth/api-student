@@ -23,6 +23,9 @@ import { InternalServerError, HttpException, NotFoundException } from '../../exc
 // Import interfaces
 import { IResponse } from '../../interfaces'
 
+// Import config
+import { upload } from '../../../config/multer'
+
 class TaskHandler extends AbstractHandler {
   public path:string = '/task'
   public router:Router = Router()
@@ -32,6 +35,9 @@ class TaskHandler extends AbstractHandler {
     this.router.post(this.path, this.create)
     this.router.get(this.path, this.getById)
     this.router.get(`${this.path}s`, this.getAll)
+    this.router.post(`${this.path}/file`, upload.single('file'), this.addFileToTask)
+    this.router.post(`${this.path}/course`, this.assignTaskToCourse)
+    this.router.post(`${this.path}/change-status`, this.assignTaskAsCompleted)
   }
 
   public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
@@ -132,6 +138,32 @@ class TaskHandler extends AbstractHandler {
     } catch (error) {
       next(new InternalServerError('internal server error.'))
     }
+  }
+  public async assignTaskAsCompleted(req:Request, res:Response, next:NextFunction): Promise<void> {
+    const taskId:string = req.query.taskId as string
+    try {
+      if(!isValidObjectId(taskId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param taskId is not valid.'))
+      const task = await TaskModel.findByIdAndUpdate(taskId, { completed: true }, { new: true, useFindAndModify: false })
+      if(!task) next(new NotFoundException(`the task with the ID ${taskId} was not found.`))
+      const response:IResponse = {
+        data: task,
+        status: {
+          ok: true,
+          code: HttpStatus.OK,
+          message: 'completed task successfully'
+        },
+        info: {
+          url: req.url,
+          datetime: new Date(Date.now()).toLocaleString()
+        }
+      }
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(new InternalServerError('internal server error'))
+    }
+  }
+  public async addFileToTask(req:Request, res:Response, next:NextFunction): Promise<void> {
+
   }
   public async delete():Promise<void> {}
   public async update():Promise<void> {}
