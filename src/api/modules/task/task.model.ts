@@ -33,6 +33,25 @@ const TaskSchema = new Schema({
     required: true,
     enum: ['PLATZI', 'UDEMY', 'EDTEAM', 'YOUTUBE'],
   },
+  files: [{
+    name: {
+      type: String,
+      required: true
+    },
+    size: {
+      type: Number,
+      required: true
+    },
+    path: {
+      type: String,
+      required: true
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: ['IMAGE', 'PDF']
+    }
+  }],
   updatedAt: {
     type: Date,
     default: Date.now()

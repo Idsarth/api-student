@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express'
 import { isValidObjectId, Types } from 'mongoose'
+import path from 'path'
 
 // Import handlers
 import { AbstractHandler } from '../../handlers/abstract.handler'
@@ -163,10 +164,38 @@ class TaskHandler extends AbstractHandler {
     }
   }
   public async addFileToTask(req:Request, res:Response, next:NextFunction): Promise<void> {
+    const taskId:string = req.query.taskId as string
     try {
-      
-     
-      
+      if(!isValidObjectId(taskId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param taskId is not valid.'))
+
+      const { originalname, size, mimetype, destination } = req.file
+
+      const task = await TaskModel.findByIdAndUpdate(taskId, {
+        $push: {
+          files: {
+            name: originalname,
+            size,
+            path: destination,
+            type: /application\/pdf/.test(mimetype) ? 'PDF' : 'IMAGE'
+          }
+        }
+      }, { new: true, useFindAndModify: false })
+      .select('-__v')
+
+      const response:IResponse = {
+        data: task,
+        status: {
+          ok: true,
+          code: HttpStatus.OK,
+          message: 'file addedd successfully.'
+        },
+        info: {
+          url: req.url,
+          datetime: new Date(Date.now()).toLocaleString()
+        }
+      }
+
+      res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(new InternalServerError('internal server error.'))
     }
