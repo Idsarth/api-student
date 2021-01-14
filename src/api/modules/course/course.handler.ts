@@ -15,6 +15,7 @@ import { CourseDto } from './course.dto'
 
 // Import model
 import { CourseModel } from './course.model'
+import { TechnologyModel as TechModel } from '../tech/tech.model'
 
 // Import exceptions
 import { InternalServerError, HttpException, NotFoundException } from '../../exceptions'
@@ -31,6 +32,7 @@ class CourseHandler extends AbstractHandler {
     this.router.post(this.path, this.create)
     this.router.get(`${this.path}s`, this.getAll)
     this.router.get(`${this.path}`, this.getById)
+    this.router.post(`${this.path}/tech`, this.assignCourseToTech)
   }
 
   public async getAll(req:Request, res:Response, next:NextFunction):Promise<void> {
@@ -84,14 +86,15 @@ class CourseHandler extends AbstractHandler {
     }
   }
   public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
-    const course: CourseDto = req.body
+    const course:CourseDto = req.body
+
     try {
       const check = await CourseModel.findOne({ name: course.name })
       if(check) next(new HttpException(HttpStatus.BAD_REQUEST, `the name property must be unique.`))
       else {
         const model = await CourseModel.create({ ...course })
         const document = await model.save()
-  
+
         const response:IResponse = {
           data: document,
           status: {
@@ -110,6 +113,31 @@ class CourseHandler extends AbstractHandler {
       next(new InternalServerError('internal server error.'))
     }
   }
+  public async assignCourseToTech(req:Request, res:Response, next:NextFunction): Promise<void> {
+    const courseId:string = req.query.courseId as string
+    const techId:string = req.query.techId as string
+
+    try {
+      const tech = await TechModel.findByIdAndUpdate(techId, { $push: { courses: Types.ObjectId(courseId) } }, { new: true, useFindAndModify: false })
+      if(!tech) next(new NotFoundException(`the technology with the ID ${techId} was not found.`))
+      const response:IResponse = {
+        data: tech,
+        status: {
+          ok: true,
+          code: HttpStatus.OK,
+          message: `the course was assigned to technology ${tech?.name}`
+        },
+        info: {
+          url: req.url,
+          datetime: new Date(Date.now()).toLocaleString()
+        }
+      }
+      res.status(HttpStatus.OK).json(response)
+    } catch (error) {
+      next(new InternalServerError('internal server error.'))
+    }
+  }
+
   public async delete():Promise<void> {}
   public async update():Promise<void> {}
 }

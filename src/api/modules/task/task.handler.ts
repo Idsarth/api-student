@@ -36,34 +36,50 @@ class TaskHandler extends AbstractHandler {
 
   public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
     const task:CreateTaskDto = req.body
-    const courseId:string = req.query.courseId as string
     try {
       const check = await TaskModel.findOne({ name: task.name })
       if(check) next(new HttpException(HttpStatus.BAD_REQUEST, `the name property must be unique.`))
       else {
-        if(isValidObjectId(courseId)) {
-          const model = await TaskModel.create({ ...task })
-          const document = await model.save()
-
-          // agrega la tarea al curso
-          await CourseModel.findByIdAndUpdate(courseId, { $push: { tasks: Types.ObjectId(document._id) } }, { new: true, useFindAndModify: false })
-          const response:IResponse = {
-            data: document,
-            status: {
-              ok: true,
-              code: HttpStatus.CREATED,
-              message: 'task created successfully'
-            },
-            info: {
-              url: req.url,
-              datetime: new Date(Date.now()).toLocaleString()
-            }
+        const model = await TaskModel.create({ ...task })
+        const document = await model.save()
+        const response:IResponse = {
+          data: document,
+          status: {
+            ok: true,
+            code: HttpStatus.CREATED,
+            message: 'task created successfully'
+          },
+          info: {
+            url: req.url,
+            datetime: new Date(Date.now()).toLocaleString()
           }
-          res.status(HttpStatus.CREATED).json(response)
-        } else {
-          next(new HttpException(HttpStatus.BAD_REQUEST, 'the courseId property is not valid.'))
+        }
+        res.status(HttpStatus.CREATED).json(response)
+      }
+    } catch (error) {
+      next(new InternalServerError('internal server error.'))
+    }
+  }
+  public async assignTaskToCourse(req:Request, res:Response, next:NextFunction): Promise<void> {
+    const courseId:string = req.query.courseId as string
+    const taskId:string = req.query.techId as string
+
+    try {
+      const course = await CourseModel.findByIdAndUpdate(courseId, { $push: { tasks: Types.ObjectId(taskId) } }, { new: true, useFindAndModify: false })
+      if(!course) next(new NotFoundException(`the course with the ID ${courseId} was not found.`))
+      const response:IResponse = {
+        data: course,
+        status: {
+          ok: true,
+          code: HttpStatus.OK,
+          message: `the task was assigned to course ${course?.name}`
+        },
+        info: {
+          url: req.url,
+          datetime: new Date(Date.now()).toLocaleString()
         }
       }
+      res.status(HttpStatus.OK).json(response)
     } catch (error) {
       next(new InternalServerError('internal server error.'))
     }

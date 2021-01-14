@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction, Router } from 'express'
 
 // Import exceptions
-import { InternalServerError } from '../../exceptions'
+import { HttpException, InternalServerError } from '../../exceptions'
 
 // Import handlers
 import { AbstractHandler } from '../../handlers/abstract.handler'
+import { IResponse } from '../../interfaces'
 
 // Import middlews
 import { TokenMiddlew } from '../../middlew'
+import { HttpStatus } from '../../services'
 
 // Import Dto
 import { CreateTechDto } from './tech.dto'
@@ -31,9 +33,25 @@ class TechHandler extends AbstractHandler {
     const tech:CreateTechDto = req.body
     try {
       const check = await TechModel.findOne({ $or: [{name: tech.name}, {docsUrl: tech.docsUrl}] })
-      console.log(check)
+      if(check) next(new HttpException(HttpStatus.BAD_REQUEST, `the name or docsUrl property must be unique.`))
+      else {
+        const model = await TechModel.create({ ...tech })
+        const document = await model.save()
 
-      res.end({})
+        const response:IResponse = {
+          data: document,
+          status: {
+            ok: true,
+            code: HttpStatus.CREATED,
+            message: 'technology created successfully.'
+          },
+          info: {
+            url: req.url,
+            datetime: new Date(Date.now()).toLocaleString()
+          }
+        }
+        res.status(HttpStatus.CREATED).json(response)
+      }
     } catch (error) {
       next(new InternalServerError('internal server error.'))
     }
