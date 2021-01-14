@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express'
 import { isValidObjectId, Types } from 'mongoose'
-import path from 'path'
 
 // Import handlers
 import { AbstractHandler } from '../../handlers/abstract.handler'
@@ -12,7 +11,7 @@ import { TokenMiddlew } from '../../middlew'
 import { HttpStatus } from '../../services'
 
 // Import dto
-import { CreateTaskDto } from './task.dto'
+import { CreateTaskDto, UpdateTaskDto, PLATFORM } from './task.dto'
 
 // Import model
 import { TaskModel } from './task.model'
@@ -199,11 +198,22 @@ class TaskHandler extends AbstractHandler {
     } catch (error) {
       next(new InternalServerError('internal server error.'))
     }
-
   }
-  public async delete():Promise<void> {}
-  public async update():Promise<void> {}
+  public async update(req:Request, res:Response, next:NextFunction):Promise<void> {
+    const taskId:string = req.query.taskId as string
+    const task:UpdateTaskDto = req.body
 
+    try {
+      if(!isValidObjectId(taskId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param taskId is not valid.'))
+
+      const model = await TaskModel.findByIdAndUpdate(taskId, { ...task }, { new: true, useFindAndModify: false })
+      
+    } catch (error) {
+      next(new InternalServerError('internal server error'))
+    }
+  }
+
+  public async delete():Promise<void> {}
 }
 
 export default new TaskHandler()

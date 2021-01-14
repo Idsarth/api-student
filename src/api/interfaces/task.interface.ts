@@ -1,6 +1,6 @@
 import { IModel } from './model.interface'
 
-enum Platform {
+enum PLATFORM {
   PLATZI = 'PLATZI',
   UDEMY = 'UDEMY',
   EDTEAM = 'EDTEAM',
@@ -9,8 +9,8 @@ enum Platform {
 
 export interface ITask extends IModel {
   name:string
-  description?:string
-  imageUrl?:string
-  completed: boolean
-  platform:Platform
+  description:string
+  imageUrl:string
+  completed:boolean
+  platform:PLATFORM
 }

@@ -28,11 +28,21 @@ const TaskSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  status: {
+    type: String,
+    required: true,
+    default: 'PENDING',
+    enum: ['CURRENT', 'PENDING', 'COMPLETED']
+  },
   platform: {
     type: String,
     required: true,
     enum: ['PLATZI', 'UDEMY', 'EDTEAM', 'YOUTUBE'],
   },
+  notes: [{
+    ref: 'note',
+    type: Schema.Types.ObjectId
+  }],
   files: [{
     name: {
       type: String,

@@ -30,7 +30,7 @@ class NoteHandler extends AbstractHandler {
   constructor() {
     super()
 
-    this.router.post(this.path,)
+    this.router.post(this.path,this.create)
   }
 
   public async create(req:Request, res:Response, next:NextFunction) {
