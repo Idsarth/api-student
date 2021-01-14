@@ -1,6 +1,6 @@
+import multer, { FileFilterCallback } from 'multer'
 import { Request } from 'express'
 import crypto from 'crypto'
-import multer, { FileFilterCallback } from 'multer'
 import path from 'path'
 
 const storage = multer.diskStorage({
@@ -8,8 +8,10 @@ const storage = multer.diskStorage({
     cb(null, path.resolve(__dirname, '..', 'tmp', 'uploads'))
   },
   filename: (req:Request, file:Express.Multer.File, cb:(err:Error | null, filename:string) => void) => {
-    const bytes = crypto.randomBytes(16)
-    cb(null, bytes.toString())
+    crypto.randomBytes(16, (err:Error | null, hash:Buffer) => {
+      if(err) cb(err, '')
+      cb(null, `${hash.toString('hex')}${path.extname(file.originalname)}`)
+    })
   }
 })
 

@@ -163,6 +163,13 @@ class TaskHandler extends AbstractHandler {
     }
   }
   public async addFileToTask(req:Request, res:Response, next:NextFunction): Promise<void> {
+    try {
+      
+     
+      
+    } catch (error) {
+      next(new InternalServerError('internal server error.'))
+    }
 
   }
   public async delete():Promise<void> {}
