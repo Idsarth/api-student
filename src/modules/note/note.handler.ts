@@ -18,7 +18,7 @@ import { NoteModel } from './note.model'
 import { TaskModel } from '../task/task.model'
 
 // Import exceptions
-import { InternalServerError, HttpException, NotFoundException } from '../../exceptions'
+import { InternalServerError, HttpException, NotFoundException } from '../../../src/common/exceptions'
 
 // Import interfaces
 import { IResponse } from '../../interfaces'

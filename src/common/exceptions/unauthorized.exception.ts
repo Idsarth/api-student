@@ -1,5 +1,5 @@
 import { measureMemory } from 'vm'
-import { HttpStatus } from '../services/http-status.service'
+import { HttpStatus } from '../enums/http-status.enum'
 import { HttpException } from './http.exception'
 
 export class UnauthorizedException extends HttpException {

@@ -1,7 +1,7 @@
 import mongoose, { ConnectOptions } from 'mongoose'
 
 // Import middlew
-import { LogMiddlew as Log } from '../middlew'
+import { LogMiddlew as Log } from '../../../common/middlew'
 
 // Import variables
 import { 
@@ -9,7 +9,7 @@ import {
   MONGO_HOST,
   MONGO_PASSWORD,
   MONGO_USER
-} from '../../env'
+} from '../../src/env'
 
 export class Mongoose {
   private URI:string
@@ -20,7 +20,7 @@ export class Mongoose {
     this.options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useFindAndModify: true,
+      useFindAndModify: false,
       useCreateIndex: true
     }
   }

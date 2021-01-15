@@ -6,10 +6,10 @@ import path from 'path'
 import cors from 'cors'
 
 // Import handlers
-import { handlers } from './api/handlers/handlers'
+import { handlers } from '../api/handlers/handlers'
 
 // Import middlew
-import { ErrorMiddlew } from './api/middlew'
+import { ErrorMiddlew } from '../api/middlew'
 
 export class Server {
   public app: Application

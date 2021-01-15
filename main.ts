@@ -5,7 +5,7 @@ import { HOST, PORT } from './src/env'
 import { Server } from './src/server'
 
 // Import database
-import { Mongoose } from './src/api/database/mongoose'
+import { Mongoose } from './api/database/mongoose'
 
 const serve = new Server()
 const mongo = new Mongoose()

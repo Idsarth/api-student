@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 
 // Import exceptions
-import { HttpException } from '../exceptions'
+import { HttpException } from '../../src/common/exceptions'
 
 // Import interfaces
 import { IResponse } from '../interfaces'

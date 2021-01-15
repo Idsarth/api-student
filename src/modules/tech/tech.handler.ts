@@ -2,7 +2,7 @@ import { Request, Response, NextFunction, Router } from 'express'
 import { isValidObjectId, Types } from 'mongoose'
 
 // Import exceptions
-import { HttpException, InternalServerError } from '../../exceptions'
+import { HttpException, InternalServerError } from '../../../src/common/exceptions'
 
 // Import handlers
 import { AbstractHandler } from '../../handlers/abstract.handler'

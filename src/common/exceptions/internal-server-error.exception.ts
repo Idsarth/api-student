@@ -1,5 +1,5 @@
 // Import services
-import { HttpStatus } from '../services/http-status.service'
+import { HttpStatus } from '../enums/http-status.enum'
 
 import { HttpException } from './http.exception'
 

@@ -18,7 +18,7 @@ import { CourseModel } from './course.model'
 import { TechnologyModel as TechModel } from '../tech/tech.model'
 
 // Import exceptions
-import { InternalServerError, HttpException, NotFoundException } from '../../exceptions'
+import { InternalServerError, HttpException, NotFoundException } from '../../../src/common/exceptions'
 
 // Import interfaces
 import { IResponse } from '../../interfaces'
