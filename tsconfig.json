@@ -18,7 +18,7 @@
     // "rootDir": "./",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     // "composite": true,                     /* Enable project compilation */
     // "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */
-    // "removeComments": true,                /* Do not emit comments to output. */
+    "removeComments": true,                /* Do not emit comments to output. */
     // "noEmit": true,                        /* Do not emit outputs. */
     // "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
     // "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
@@ -43,8 +43,49 @@
 
     /* Module Resolution Options */
     // "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
-    // "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
-    // "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+    "baseUrl": "src",                       /* Base directory to resolve non-absolute module names. */
+    "paths": {
+      "@common/enums": ["src/common/enums"],
+      "@common/enums/*": ["src/common/enums/*"],
+
+      "@common/exceptions": ["src/common/exceptions"],
+      "@common/exceptions/*": ["src/common/exceptions/*"],
+
+      "@common/services": ["src/common/services"],
+      "@common/services/*": ["src/common/services/*"],
+
+      "@common/interfaces": ["src/common/interfaces"],
+      "@common/interfaces/*": ["src/common/interfaces/*"],
+
+      "@common/middlew": ["src/common/middlew"],
+      "@common/middlew/*": ["src/common/middlew/*"],
+
+      "@common/types": ["src/common/types"],
+      "@common/types/*": ["src/common/types/*"],
+
+      "@config": ["src/config"],
+      "@config/*": ["src/config/*"],
+
+      "@handlers": ["src/handlers"],
+      "@handlers/*": ["src/handlers/*"],
+
+      "@providers": ["src/providers"],
+      "@providers/*": ["src/providers/*"],
+
+      "@swagger": ["src/swagger"],
+      "@swagger/*": ["src/swagger/*"],
+
+      "@env": ["src/env.ts"],
+      "@server": ["src/server.ts"],
+
+      "@auth": ["src/modules/auth"],
+      "@course": ["src/modules/course"],
+      "@file": ["src/modules/file"],
+      "@note": ["src/modules/note"],
+      "@task": ["src/modules/task"],
+      "@tech": ["src/modules/tech"],
+
+    },                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */
     "types": ["node", "./src/common/types"],
@@ -66,5 +107,10 @@
     /* Advanced Options */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/**/**/*.spec.ts"
+  ]
 }

@@ -4,11 +4,12 @@
   "description": "InSafe student api rest",
   "main": "main.ts",
   "scripts": {
-    "start": "corss-env NODE_ENV=production node ./dist/main.js",
-    "dev": "cross-env NODE_ENV=development nodemon",
-    "build": "cross-env NODE_ENV=production tsc && node ./dist/main.js",
-    "test": "",
-    "": ""
+    "start": "corss-env NODE_ENV=PRODUCTION node ./dist/main.js",
+    "build": "cross-env NODE_ENV=PRODUCTION tsc && node ./dist/main.js",
+    "env:prod": "cross-env NODE_ENV=PRODUCTION node ./dist/mina.js",
+    "env:dev": "cross-env NODE_ENV=DEVELOPMENT nodemon",
+    "env:staging": "cross-env NODE_ENV=STANGING nodemon",
+    "test": ""
   },
   "keywords": [
     "insafe",
@@ -20,6 +21,7 @@
   "author": "Idsarth <idsarthdev19@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.3.0",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
     "cors": "^2.8.5",

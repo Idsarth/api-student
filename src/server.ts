@@ -6,10 +6,10 @@ import path from 'path'
 import cors from 'cors'
 
 // Import handlers
-import { handlers } from '../api/handlers/handlers'
+import { handlers } from '@handlers/handlers'
 
 // Import middlew
-import { ErrorMiddlew } from '../api/middlew'
+import { ErrorMiddlew } from '@common/middlew'
 
 export class Server {
   public app: Application
@@ -25,8 +25,8 @@ export class Server {
   private middlew(): void {
     this.app.use(json())
     this.app.use(cors())
-    this.app.use(morgan('dev'))
     this.app.use(helmet())
+    this.app.use(morgan('dev'))
     this.app.use(compression())
     this.app.use(urlencoded({ extended: true }))
     this.app.use(express.static(path.join(__dirname, './public')))
