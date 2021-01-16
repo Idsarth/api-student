@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction, Router } from 'express'
 
 // Import interfaces
-import { IHandler } from '../interfaces'
+import { IHandler } from '@common/interfaces'
 
 export abstract class AbstractHandler implements IHandler {
   public abstract path:string

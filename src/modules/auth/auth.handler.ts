@@ -1,9 +1,9 @@
 import { Response, Request, Router } from 'express'
 
 // Import handlers
-import { Handler } from '../../interfaces'
+import { IHandler } from '@common/interfaces'
 
-class AuthHandler implements Handler {
+class AuthHandler implements IHandler {
   public path: string = '/auth'
   public router = Router()
 

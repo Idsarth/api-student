@@ -1,7 +1,7 @@
 import { model, Schema, Document } from 'mongoose'
 
 // Import interfaces
-import { ICourse } from '../../interfaces'
+import { ICourse } from '@common/interfaces'
 
 export interface ICourseModel extends ICourse, Document {}
 

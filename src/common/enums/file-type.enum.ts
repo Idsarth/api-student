@@ -1,0 +1,1 @@
+export enum FileTypes { IMAGE='IMAGE', PDF='PDF' }

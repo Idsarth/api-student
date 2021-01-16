@@ -1,7 +1,7 @@
 import { model, Schema, Document } from 'mongoose'
 
 // Import interfaces
-import { ITechnology } from '../../interfaces'
+import { ITechnology } from '@common/interfaces'
 
 interface ITechModel extends ITechnology, Document {}
 

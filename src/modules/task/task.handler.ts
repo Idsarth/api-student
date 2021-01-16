@@ -5,10 +5,10 @@ import { isValidObjectId, Types } from 'mongoose'
 import { AbstractHandler } from '../../handlers/abstract.handler'
 
 // Import middlews
-import { TokenMiddlew } from '../../middlew'
+import { TokenMiddlew } from '@common/middlew'
 
 // Import services
-import { HttpStatus } from '../../services'
+import { HttpStatus } from '@common/enums'
 
 // Import dto
 import { CreateTaskDto, UpdateTaskDto, PLATFORM } from './task.dto'
@@ -21,7 +21,7 @@ import { CourseModel } from '../course/course.model'
 import { InternalServerError, HttpException, NotFoundException } from '../../../src/common/exceptions'
 
 // Import interfaces
-import { IResponse } from '../../interfaces'
+import { IResponse } from '@common/interfaces'
 
 // Import config
 import { upload } from '../../../src/config/multer'

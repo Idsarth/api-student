@@ -36,21 +36,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// Import envs
+require("module-alias/register");
 var env_1 = require("./src/env");
-// Import server
 var server_1 = require("./src/server");
-/*
-* function main
-*/
+var database_1 = require("@providers/database");
+var serve = new server_1.Server();
+var mongo = new database_1.Mongoose();
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var serve;
     return __generator(this, function (_a) {
-        serve = new server_1.Server();
-        serve.listen(Number(env_1.PORT), env_1.HOST, function () {
-            console.log("Server is listening on port " + env_1.PORT + " \uD83E\uDDE8 http://" + env_1.HOST + ":" + env_1.PORT);
-        });
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0: return [4, mongo.connect()];
+            case 1:
+                _a.sent();
+                serve.listen(Number(env_1.PORT), env_1.HOST, function () {
+                    console.log("\uD83E\uDDE8 Server is listening on port " + env_1.PORT + " https://" + env_1.HOST + ":" + env_1.PORT);
+                });
+                return [2];
+        }
     });
 }); };
 main();

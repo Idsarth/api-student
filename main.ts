@@ -1,8 +1,10 @@
+import 'module-alias/register'
+
 // Import envs
-import { HOST, PORT } from '@env'
+import { HOST, PORT } from './src/env'
 
 // Import server
-import { Server } from '@server'
+import { Server } from './src/server'
 
 // Import database
 import { Mongoose } from '@providers/database'

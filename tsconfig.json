@@ -43,48 +43,40 @@
 
     /* Module Resolution Options */
     // "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
-    "baseUrl": "src",                       /* Base directory to resolve non-absolute module names. */
+    "baseUrl": "./src",                       /* Base directory to resolve non-absolute module names. */
     "paths": {
-      "@common/enums": ["src/common/enums"],
-      "@common/enums/*": ["src/common/enums/*"],
+      "@common/enums": ["common/enums"],
+      "@common/enums/*": ["common/enums/*"],
 
-      "@common/exceptions": ["src/common/exceptions"],
-      "@common/exceptions/*": ["src/common/exceptions/*"],
+      "@common/exceptions": ["common/exceptions"],
+      "@common/exceptions/*": ["common/exceptions/*"],
 
-      "@common/services": ["src/common/services"],
-      "@common/services/*": ["src/common/services/*"],
+      "@common/services": ["common/services"],
+      "@common/services/*": ["common/services/*"],
 
-      "@common/interfaces": ["src/common/interfaces"],
-      "@common/interfaces/*": ["src/common/interfaces/*"],
+      "@common/interfaces": ["common/interfaces"],
+      "@common/interfaces/*": ["common/interfaces/*"],
 
-      "@common/middlew": ["src/common/middlew"],
-      "@common/middlew/*": ["src/common/middlew/*"],
+      "@common/middlew": ["common/middlew"],
+      "@common/middlew/*": ["common/middlew/*"],
 
-      "@common/types": ["src/common/types"],
-      "@common/types/*": ["src/common/types/*"],
+      "@common/types": ["common/types"],
+      "@common/types/*": ["common/types/*"],
 
-      "@config": ["src/config"],
-      "@config/*": ["src/config/*"],
+      "@config": ["config"],
+      "@config/*": ["config/*"],
 
-      "@handlers": ["src/handlers"],
-      "@handlers/*": ["src/handlers/*"],
+      "@handlers": ["handlers"],
+      "@handlers/*": ["handlers/*"],
 
-      "@providers": ["src/providers"],
-      "@providers/*": ["src/providers/*"],
+      "@providers": ["providers"],
+      "@providers/*": ["providers/*"],
 
-      "@swagger": ["src/swagger"],
-      "@swagger/*": ["src/swagger/*"],
+      "@swagger": ["swagger"],
+      "@swagger/*": ["swagger/*"],
 
-      "@env": ["src/env.ts"],
-      "@server": ["src/server.ts"],
-
-      "@auth": ["src/modules/auth"],
-      "@course": ["src/modules/course"],
-      "@file": ["src/modules/file"],
-      "@note": ["src/modules/note"],
-      "@task": ["src/modules/task"],
-      "@tech": ["src/modules/tech"],
-
+      "@modules": ["modules"],
+      "@modules/*": ["modules/*"]
     },                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */

@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 
 // Import exceptions
-import { HttpException } from '../../src/common/exceptions'
+import { HttpException } from '@common/exceptions'
 
 // Import interfaces
-import { IResponse } from '../interfaces'
+import { IResponse } from '@common/interfaces'
 
 class ErrorMiddlew {
   public error(err:HttpException, req:Request, res:Response, next:NextFunction) {

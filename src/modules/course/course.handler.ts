@@ -5,10 +5,10 @@ import { isValidObjectId, Types } from 'mongoose'
 import { AbstractHandler } from '../../handlers/abstract.handler'
 
 // Import middlews
-import { TokenMiddlew } from '../../middlew'
+import { TokenMiddlew } from '@common/middlew'
 
 // Import services
-import { HttpStatus } from '../../services'
+import { HttpStatus } from '@common/enums'
 
 // Import dto
 import { CourseDto } from './course.dto'
@@ -21,7 +21,7 @@ import { TechnologyModel as TechModel } from '../tech/tech.model'
 import { InternalServerError, HttpException, NotFoundException } from '../../../src/common/exceptions'
 
 // Import interfaces
-import { IResponse } from '../../interfaces'
+import { IResponse } from '@common/interfaces'
 
 class CourseHandler extends AbstractHandler {
   public path:string = '/course'

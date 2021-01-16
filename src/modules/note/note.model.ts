@@ -1,7 +1,7 @@
 import { model, Schema, Document } from 'mongoose'
 
 // Import interfaces
-import { INote } from '../../interfaces'
+import { INote } from '@common/interfaces'
 
 interface INoteModel extends INote, Document {}
 

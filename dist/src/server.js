@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,23 +59,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Server = void 0;
-var express_1 = __importDefault(require("express"));
-var Server = /** @class */ (function () {
+var express_1 = __importStar(require("express"));
+var compression_1 = __importDefault(require("compression"));
+var morgan_1 = __importDefault(require("morgan"));
+var helmet_1 = __importDefault(require("helmet"));
+var path_1 = __importDefault(require("path"));
+var cors_1 = __importDefault(require("cors"));
+var _handlers_1 = require("@handlers");
+var middlew_1 = require("@common/middlew");
+var Server = (function () {
     function Server() {
         this.app = express_1.default();
         this.middlew();
         this.handlers();
+        this.errHandler();
     }
     Server.prototype.middlew = function () {
-        this.app.use(express_1.default.json());
+        this.app.use(express_1.json());
+        this.app.use(cors_1.default());
+        this.app.use(helmet_1.default());
+        this.app.use(morgan_1.default('dev'));
+        this.app.use(compression_1.default());
+        this.app.use(express_1.urlencoded({ extended: true }));
+        this.app.use(express_1.default.static(path_1.default.join(__dirname, './public')));
+    };
+    Server.prototype.errHandler = function () {
+        this.app.use(middlew_1.ErrorMiddlew.error);
     };
     Server.prototype.handlers = function () {
+        var _this = this;
+        _handlers_1.handlers.forEach(function (handler) {
+            _this.app.use('/api/v1', handler.router);
+        });
     };
     Server.prototype.listen = function (port, host, callback) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 this.app.listen(port, host, callback);
-                return [2 /*return*/];
+                return [2];
             });
         });
     };

@@ -6,11 +6,11 @@ import { HttpException, InternalServerError } from '../../../src/common/exceptio
 
 // Import handlers
 import { AbstractHandler } from '../../handlers/abstract.handler'
-import { IResponse } from '../../interfaces'
+import { IResponse } from '@common/interfaces'
 
 // Import middlews
-import { TokenMiddlew } from '../../middlew'
-import { HttpStatus } from '../../services'
+import { TokenMiddlew } from '@common/middlew'
+import { HttpStatus } from '@common/enums'
 
 // Import Dto
 import { CreateTechDto } from './tech.dto'

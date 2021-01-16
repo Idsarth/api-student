@@ -1,7 +1,7 @@
 import { model, Schema, Document } from 'mongoose'
 
 // Import interfaces
-import { ITask } from '../../interfaces'
+import { ITask } from '@common/interfaces'
 
 interface ITaskModel extends ITask, Document {}
 

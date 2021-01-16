@@ -2,10 +2,7 @@ import { NextFunction, Response, Request } from 'express'
 import { verify } from 'jsonwebtoken'
 
 // Import exceptions
-import { UnauthorizedException, ForbiddenException } from '../../src/common/exceptions'
-
-// Import variables
-import { SECRET_KEY } from '../../src/env'
+import { UnauthorizedException, ForbiddenException } from '@common/exceptions'
 
 class TokenMiddlew {
   public validated(req:Request, res:Response, next:NextFunction) {

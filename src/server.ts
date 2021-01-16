@@ -6,7 +6,7 @@ import path from 'path'
 import cors from 'cors'
 
 // Import handlers
-import { handlers } from '@handlers/handlers'
+import { handlers } from '@handlers'
 
 // Import middlew
 import { ErrorMiddlew } from '@common/middlew'

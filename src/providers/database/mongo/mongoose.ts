@@ -9,7 +9,7 @@ import {
   MONGO_HOST,
   MONGO_PASSWORD,
   MONGO_USER
-} from '../../src/env'
+} from '../../../env'
 
 export class Mongoose {
   private URI:string
