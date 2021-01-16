@@ -1,7 +1,8 @@
-// Import services
-import { HttpStatus } from '../enums/http-status.enum'
+// Import enums
+import { HttpStatus } from '@common/enums'
 
-import { HttpException } from './http.exception'
+// Import exceptions
+import { HttpException } from '@common/exceptions/http.exception'
 
 export class InternalServerError extends HttpException {
   constructor(message:string) {

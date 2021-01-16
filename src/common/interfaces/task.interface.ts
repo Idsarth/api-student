@@ -1,16 +1,12 @@
-import { IModel } from './model.interface'
+import { IModel } from '@common/interfaces/model.interface'
 
-enum PLATFORM {
-  PLATZI = 'PLATZI',
-  UDEMY = 'UDEMY',
-  EDTEAM = 'EDTEAM',
-  YOUTUBE = 'YOUTUBE'
-}
+// Import enums
+import { Platform } from '@common/enums'
 
 export interface ITask extends IModel {
   name:string
   description:string
   imageUrl:string
   completed:boolean
-  platform:PLATFORM
+  platform:Platform
 }

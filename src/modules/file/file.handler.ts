@@ -1,6 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import { S3 } from 'aws-sdk'
 
+// Import services
+import { ResponseService } from '@common/services'
+
 // Import envs
 import { AWS_BUCKET_NAME_S3 } from '../../env'
 
@@ -20,15 +23,13 @@ import { InternalServerError } from '@common/exceptions'
 // Import dto
 import { CreateFileDto } from '@modules/file/dto/create-file.dto'
 
-// Import interfaces
-import { IResponse } from '@common/interfaces'
-
 // Import enums
 import { HttpStatus } from '@common/enums'
 
 class FileHandler extends AbstractHandler {
   public path:string = '/file'
   public router:Router = Router()
+  private response = ResponseService.response
 
   constructor() {
     super()
@@ -39,7 +40,7 @@ class FileHandler extends AbstractHandler {
   public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
     const body:CreateFileDto = req.body
     try {
-      const { originalname, size, buffer } = req.file
+      const { originalname, size, buffer, mimetype } = req.file
       const file = originalname.replace(/\s/g, '').split('.')
       const params:S3.Types.PutObjectRequest = {
         Bucket: AWS_BUCKET_NAME_S3,
@@ -52,32 +53,27 @@ class FileHandler extends AbstractHandler {
           name: file[0],
           size,
           path: data.Location,
-          type: 'PDF',
+          type: /application\/pdf/.test(mimetype) ? 'PDF' : 'IMAGE',
           ...body,
         })
         const document = await model.save()
-        const response:IResponse = {
+        const response = {
           data: document,
-          status: {
-            ok: true,
-            code: HttpStatus.CREATED,
-            message: ''
-          },
-          info: {
-            url: req.url,
-            datetime: new Date(Date.now()).toLocaleString()
-          }
+          ok: true,
+          code: HttpStatus.CREATED,
+          message: `${/application\/pdf/.test(mimetype) ? 'file' : 'image'} uploaded successfully.`,
+          url: req.url
         }
-        res.status(HttpStatus.CREATED).json(response)
+        res.status(HttpStatus.CREATED).json(this.response(response))
       })
     } catch (error) {
       next(new InternalServerError('internal server error.'))
     }
   }
+  public async getById():Promise<void> {}
   public async getAll():Promise<void> {}
   public async update():Promise<void> {}
   public async delete():Promise<void> {}
-  public async getById():Promise<void> {}
 }
 
-export default new FileHandler
+export default new FileHandler()

@@ -8,7 +8,8 @@ import {
   MONGO_DATABASE,
   MONGO_HOST,
   MONGO_PASSWORD,
-  MONGO_USER
+  MONGO_USER,
+  NODE_ENV
 } from '../../../env'
 
 export class Mongoose {
@@ -28,7 +29,7 @@ export class Mongoose {
   async connect():Promise<void> {
     try {
       await mongoose.connect(this.URI, this.options)
-      console.log('🎉 Database is connected')
+      console.log(`🎉 Database is connected in ${NODE_ENV.toLowerCase()}`)
     } catch (error) {
       console.log('💣 Error connecting to database')
       process.exit(1)

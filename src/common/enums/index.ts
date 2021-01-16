@@ -1,2 +1,3 @@
-export { FileTypes } from './file-type.enum'
-export { HttpStatus } from './http-status.enum'
+export { FileTypes } from '@common/enums/file-type.enum'
+export { HttpStatus } from '@common/enums/http-status.enum'
+export { Platform } from '@common/enums/platform.enum'
