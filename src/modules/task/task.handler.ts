@@ -36,7 +36,6 @@ class TaskHandler extends AbstractHandler {
     this.router.post(this.path, this.create.bind(this))
     this.router.patch(this.path, this.update.bind(this))
     this.router.get(`${this.path}s`, this.getAll.bind(this))
-    this.router.post(this.path, this.addNoteToTask.bind(this))
     this.router.post(this.path, this.addTaskToCourse.bind(this))
     this.router.get(this.path, this.getTaskByCourseId.bind(this))
     this.router.post(`${this.path}/file`, this.addFileToTask.bind(this))
@@ -197,7 +196,7 @@ class TaskHandler extends AbstractHandler {
 
   public async addTaskToCourse(req:Request, res:Response, next:NextFunction):Promise<void> {
     const courseId:string = req.query.courseId as string
-    const taskId:string = req.query.techId as string
+    const taskId:string = req.query.taskId as string
 
     try {
       if(!isValidObjectId(courseId) || !isValidObjectId(taskId)) {
@@ -215,29 +214,6 @@ class TaskHandler extends AbstractHandler {
         url: req.url,
       }
       res.status(HttpStatus.OK).json(this.response(response))
-    } catch (error) {
-      next(new InternalServerError('internal server error.'))
-    }
-  }
-
-  public async addNoteToTask(req:Request, res:Response, next:NextFunction):Promise<void> {
-    const taskId:string = req.query.taskId as string
-    const noteId:string = req.query.noteId as string
-    try {
-      if(!isValidObjectId(taskId) || !isValidObjectId(noteId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the params taskId or nodeId is not valid.'))
-
-      const task = await TaskModel.findByIdAndUpdate(taskId, { $push: { notes: Types.ObjectId(noteId) } }, { new: true, useFindAndModify: false})
-      if(!task) next(new NotFoundException(`the task with the ID ${taskId} was not found. `))
-
-      const response = {
-        data: task,
-        ok: true,
-        code: HttpStatus.OK,
-        message: 'note added successfully.',
-        url: req.url,
-      }
-
-      res.status(response.code).json(this.response(response))
     } catch (error) {
       next(new InternalServerError('internal server error.'))
     }
