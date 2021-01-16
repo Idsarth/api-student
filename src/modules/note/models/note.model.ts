@@ -1,9 +1,7 @@
-import { model, Schema, Document } from 'mongoose'
+import { model, Schema } from 'mongoose'
 
 // Import interfaces
-import { INote } from '@common/interfaces'
-
-interface INoteModel extends INote, Document {}
+import { INoteModel } from '@modules/note/interfaces/note.interface'
 
 const NoteSchema = new Schema({
   name: {
@@ -13,6 +11,14 @@ const NoteSchema = new Schema({
   description: {
     type: String,
     required: true
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now()
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now()
   }
 })
 

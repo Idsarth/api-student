@@ -1,9 +1,7 @@
-import { model, Schema, Document } from 'mongoose'
+import { model, Schema } from 'mongoose'
 
 // Import interfaces
-import { ITask } from '@common/interfaces'
-
-interface ITaskModel extends ITask, Document {}
+import { ITaskModel } from '@modules/task/interfaces/task.interface'
 
 const TaskSchema = new Schema({
   name: {
@@ -44,23 +42,12 @@ const TaskSchema = new Schema({
     type: Schema.Types.ObjectId
   }],
   files: [{
-    name: {
-      type: String,
-      required: true
-    },
-    size: {
-      type: Number,
-      required: true
-    },
-    path: {
-      type: String,
-      required: true
-    },
-    type: {
-      type: String,
-      required: true,
-      enum: ['IMAGE', 'PDF']
-    }
+    ref: 'file',
+    type: Schema.Types.ObjectId
+  }],
+  topics: [{
+    ref: 'topic',
+    type: Schema.Types.ObjectId
   }],
   updatedAt: {
     type: Date,

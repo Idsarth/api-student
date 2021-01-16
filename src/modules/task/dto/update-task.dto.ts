@@ -3,28 +3,6 @@ import { IsString, IsEnum, IsOptional, IsBoolean } from 'class-validator'
 // Import enums
 import { StatusTask, Platform } from '@common/enums'
 
-export class CreateTaskDto {
-  @IsString()
-  public name:string
-
-  @IsString()
-  @IsOptional()
-  public description:string
-
-  @IsString()
-  @IsOptional()
-  public imageUrl:string
-
-  @IsString()
-  @IsEnum(Platform)
-  public platform:Platform
-  
-  @IsString()
-  @IsEnum(StatusTask)
-  @IsOptional()
-  public status:string
-}
-
 export class UpdateTaskDto {
   @IsString()
   @IsOptional()
@@ -38,17 +16,21 @@ export class UpdateTaskDto {
   @IsOptional()
   public imageUrl:string
   
-  @IsString()
-  @IsEnum(Platform)
+  @IsBoolean()
   @IsOptional()
-  public platform:Platform
+  public isActive:boolean
+  
+  @IsBoolean()
+  @IsOptional()
+  public completed:boolean
   
   @IsString()
   @IsEnum(StatusTask)
   @IsOptional()
   public status:string
-
-  @IsBoolean()
+  
+  @IsString()
+  @IsEnum(Platform)
   @IsOptional()
-  public isActive: boolean
+  public platform:Platform
 }

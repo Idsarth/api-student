@@ -1,5 +1,5 @@
 export interface IModel {
   isActive:boolean
-  createdAt:Date
-  updatedAt:Date
+  createdAt:Date|string|number
+  updatedAt:Date|string|number
 }
