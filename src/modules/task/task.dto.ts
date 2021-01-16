@@ -1,7 +1,8 @@
 import { IsString, IsEnum, IsOptional, IsBoolean } from 'class-validator'
 
-export enum PLATFORM { PLATZI = 'PLATZI', UDEMY = 'UDEMY', EDTEAM = 'EDTEAM', YOUTUBE = 'YOUTUBE' }
-export enum STATUS {CURRENT = 'CURRENT', PENDING = 'PENDING', COMPLETED = 'COMPLETED'}
+// Import enums
+import { StatusTask, Platform } from '@common/enums'
+
 export class CreateTaskDto {
   @IsString()
   public name:string
@@ -15,11 +16,11 @@ export class CreateTaskDto {
   public imageUrl:string
 
   @IsString()
-  @IsEnum(PLATFORM)
-  public platform:PLATFORM
+  @IsEnum(Platform)
+  public platform:Platform
   
   @IsString()
-  @IsEnum(STATUS)
+  @IsEnum(StatusTask)
   @IsOptional()
   public status:string
 }
@@ -38,12 +39,12 @@ export class UpdateTaskDto {
   public imageUrl:string
   
   @IsString()
-  @IsEnum(PLATFORM)
+  @IsEnum(Platform)
   @IsOptional()
-  public platform:PLATFORM
+  public platform:Platform
   
   @IsString()
-  @IsEnum(STATUS)
+  @IsEnum(StatusTask)
   @IsOptional()
   public status:string
 

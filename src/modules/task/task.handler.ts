@@ -11,20 +11,20 @@ import { TokenMiddlew } from '@common/middlew'
 import { HttpStatus } from '@common/enums'
 
 // Import dto
-import { CreateTaskDto, UpdateTaskDto, PLATFORM } from './task.dto'
+import { CreateTaskDto, UpdateTaskDto } from './task.dto'
 
 // Import model
-import { TaskModel } from './task.model'
-import { CourseModel } from '../course/course.model'
+import { TaskModel } from '@modules/task/task.model'
+import { CourseModel } from '@modules/course/course.model'
 
 // Import exceptions
-import { InternalServerError, HttpException, NotFoundException } from '../../../src/common/exceptions'
+import { InternalServerError, HttpException, NotFoundException } from '@common/exceptions'
 
 // Import interfaces
 import { IResponse } from '@common/interfaces'
 
 // Import config
-import { upload } from '../../../src/config/multer'
+import { upload } from '@config/multer'
 
 class TaskHandler extends AbstractHandler {
   public path:string = '/task'

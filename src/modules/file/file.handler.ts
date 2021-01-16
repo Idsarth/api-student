@@ -34,23 +34,23 @@ class FileHandler extends AbstractHandler {
   constructor() {
     super()
 
-    this.router.post(this.path, upload.single('file'), this.create)
+    this.router.post(this.path, upload.single('file'), this.create.bind(this))
   }
 
   public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
     const body:CreateFileDto = req.body
     try {
       const { originalname, size, buffer, mimetype } = req.file
-      const file = originalname.replace(/\s/g, '').split('.')
+      const name = originalname.replace(/\s/g, '')
       const params:S3.Types.PutObjectRequest = {
         Bucket: AWS_BUCKET_NAME_S3,
-        Key: `${Date.now()}.${file[file.length - 1]}`,
+        Key: `${/application\/pdf/.test(mimetype) ? 'files' : 'images'}/${Date.now()}.${name.split('.')[name.split('.').length - 1]}`,
         Body: buffer
       }
       s3.upload(params, async (err:Error, data:S3.ManagedUpload.SendData) => {
         if(err) next(new InternalServerError('internal server error'))
         const model = await FileModel.create({
-          name: file[0],
+          name: name.split('.').slice(0, name.split('.').length - 1).join(''),
           size,
           path: data.Location,
           type: /application\/pdf/.test(mimetype) ? 'PDF' : 'IMAGE',
