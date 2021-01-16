@@ -6,3 +6,5 @@ tmp/
 private.key
 public.key
 dist/
+.vscode
+.idea

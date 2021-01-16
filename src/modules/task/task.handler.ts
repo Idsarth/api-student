@@ -2,7 +2,7 @@ import { Request, Response, NextFunction, Router } from 'express'
 import { isValidObjectId, Types } from 'mongoose'
 
 // Import handlers
-import { AbstractHandler } from '../../handlers/abstract.handler'
+import { AbstractHandler } from '@handlers/abstract.handler'
 
 // Import middlews
 import { TokenMiddlew } from '@common/middlew'
@@ -18,7 +18,7 @@ import { CreateTaskDto, UpdateTaskDto } from '@modules/task/dto'
 
 // Import models
 import { TaskModel } from '@modules/task/models/task.model'
-import { CourseModel } from '@modules/course/course.model'
+import { CourseModel } from '@modules/course/models/course.model'
 
 // Import exceptions
 import { InternalServerError, HttpException, NotFoundException } from '@common/exceptions'
@@ -36,10 +36,9 @@ class TaskHandler extends AbstractHandler {
     this.router.post(this.path, this.create.bind(this))
     this.router.patch(this.path, this.update.bind(this))
     this.router.get(`${this.path}s`, this.getAll.bind(this))
-    this.router.post(this.path, this.addTaskToCourse.bind(this))
-    this.router.get(this.path, this.getTaskByCourseId.bind(this))
     this.router.post(`${this.path}/file`, this.addFileToTask.bind(this))
-
+    this.router.post(`${this.path}/course`, this.addTaskToCourse.bind(this))
+    this.router.get(`${this.path}/course`, this.getTaskByCourseId.bind(this))
   }
 
   public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
@@ -62,7 +61,7 @@ class TaskHandler extends AbstractHandler {
       next(new InternalServerError('internal server error.'))
     }
   }
- 
+
   public async getById(req:Request, res:Response, next:NextFunction):Promise<void> {
     const taskId:string = req.query.taskId as string
     try {
@@ -94,7 +93,7 @@ class TaskHandler extends AbstractHandler {
         message: 'list of tasks gated successfully.',
         url: req.url,
       }
-      
+
       res.status(response.code).json(this.response(response))
     } catch (error) {
       next(new InternalServerError('internal server error.'))
@@ -163,9 +162,7 @@ class TaskHandler extends AbstractHandler {
         message: 'list of tasks gated successfully.',
         url: req.url,
       }
-
       res.status(HttpStatus.OK).json(this.response(response))
-
     } catch (error) {
       next(new InternalServerError('internal server error.'))
     }
@@ -220,7 +217,7 @@ class TaskHandler extends AbstractHandler {
   }
 
   public async addTopicToTask():Promise<void> {}
-  
+
 }
 
 export default new TaskHandler

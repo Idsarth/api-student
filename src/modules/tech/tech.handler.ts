@@ -2,116 +2,143 @@ import { Request, Response, NextFunction, Router } from 'express'
 import { isValidObjectId, Types } from 'mongoose'
 
 // Import exceptions
-import { HttpException, InternalServerError } from '../../../src/common/exceptions'
+import { HttpException, InternalServerError, NotFoundException } from '@common/exceptions'
 
 // Import handlers
-import { AbstractHandler } from '../../handlers/abstract.handler'
-import { IResponse } from '@common/interfaces'
+import { AbstractHandler } from '@handlers/abstract.handler'
 
 // Import middlews
 import { TokenMiddlew } from '@common/middlew'
+
+// Import enums
 import { HttpStatus } from '@common/enums'
 
 // Import Dto
-import { CreateTechDto } from './tech.dto'
+import { CreateTechDto, UpdateTechDto } from '@modules/tech/dto'
 
 // Import models
-import { TechnologyModel as TechModel } from './tech.model'
+import { TechnologyModel as TechModel } from '@modules/tech/models/tech.model'
+
+// Import services
+import { ResponseService } from '@common/services'
 
 class TechHandler extends AbstractHandler {
   public path:string = '/technology'
   public router:Router = Router()
+  private response = ResponseService.response
 
   constructor() {
     super()
 
-    this.router.post(this.path, this.create)
-    this.router.get(this.path, this.getById)
-    this.router.get(`/technologies`, this.getAll)
+    this.router.post(this.path, this.create.bind(this))
+    this.router.get(this.path, this.getById.bind(this))
+    this.router.get(`/technologies`, this.getAll.bind(this))
   }
 
   public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
     const tech:CreateTechDto = req.body
     try {
-      const check = await TechModel.findOne({ $or: [{name: tech.name}, {docsUrl: tech.docsUrl}] })
-      if(check) next(new HttpException(HttpStatus.BAD_REQUEST, `the name or docsUrl property must be unique.`))
-      else {
-        const model = await TechModel.create({ ...tech })
-        const document = await model.save()
+      const check = await TechModel.findOne({ name: tech.name })
+      if(check) next(new HttpException(HttpStatus.BAD_REQUEST, `the name property already exists and must be unique.`))
 
-        const response:IResponse = {
-          data: document,
-          status: {
-            ok: true,
-            code: HttpStatus.CREATED,
-            message: 'technology created successfully.'
-          },
-          info: {
-            url: req.url,
-            datetime: new Date(Date.now()).toLocaleString()
-          }
-        }
-        res.status(HttpStatus.CREATED).json(response)
+      const model = await TechModel.create({ ...tech })
+      const document = await model.save()
+
+      const response = {
+        data: document,
+        ok: true,
+        code: HttpStatus.CREATED,
+        message: 'technology created successfully.',
+        url: req.url
       }
+      res.status(response.code).json(this.response(response))
     } catch (error) {
       next(new InternalServerError('internal server error.'))
     }
   }
+
   public async getAll(req: Request, res:Response, next:NextFunction):Promise<void> {
     try {
-      const techs = await TechModel.find()
-        .populate({
-          path: 'courses',
-          populate: {
-            path: 'tasks'
-          }
-        })
-        .select('-__v')
-      
-      const response:IResponse = {
+      const techs = await TechModel.find().select('-__v')
+
+      const response = {
         data: techs,
-        status: {
-          ok: true,
-          code: HttpStatus.OK,
-          message: 'list of technologies gated successfully.'
-        },
-        info: {
-          url: req.url,
-          datetime: new Date(Date.now()).toLocaleString()
-        }
-      }
-      res.status(HttpStatus.OK).json(response)
-    } catch (error) {
-      next(new InternalServerError('internal server error'))
-    }
-  }
-  public async getById(req:Request, res:Response, next:NextFunction):Promise<void> {
-    const techId:string = req.query.techId as string
-    if(!isValidObjectId(techId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param techId is not valid.'))
-    const tech = await TechModel.findById({ _id: Types.ObjectId(techId) })
-      .populate({
-        path: 'courses',
-        populate: {
-          path: 'tasks'
-        }
-      })
-      .select('-__v')
-    const response:IResponse = {
-      data: tech,
-      status: {
         ok: true,
         code: HttpStatus.OK,
-        message: 'tech found successfully'
-      },
-      info: {
+        message: 'list of technologies gated successfully.',
         url: req.url,
-        datetime: new Date(Date.now()).toLocaleString()
       }
+      res.status(response.code).json(this.response(response))
+    } catch (error) {
+      next(new InternalServerError('internal server error.'))
     }
-    res.status(HttpStatus.OK).json(response)
   }
-  public async delete():Promise<void> {}
-  public async update():Promise<void> {}
+
+  public async getById(req:Request, res:Response, next:NextFunction):Promise<void> {
+    const techId:string = req.query.techId as string
+    try {
+      if(!isValidObjectId(techId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param techId is not valid.'))
+
+      const tech = await TechModel.findById({ _id: Types.ObjectId(techId) }).select('-__v')
+      const response = {
+        data: tech,
+        ok: true,
+        code: HttpStatus.OK,
+        message: 'tech found successfully',
+        url: req.url,
+      }
+      res.status(response.code).json(this.response(response))
+    } catch (err) {
+      next(new InternalServerError('internal server error.'))
+    }
+  }
+
+  public async update(req:Request, res:Response, next:NextFunction):Promise<void> {
+    const techId:string = req.query.techId as string
+    const tech:UpdateTechDto = req.body
+
+    try {
+      if(!isValidObjectId(techId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param techId is not valid.'))
+
+      const model = await TechModel.findByIdAndUpdate(techId, { ...tech, updatedAt: Date.now() }, { new: true, useFindAndModify: false }).select('-__v')
+      if(!model) next(new NotFoundException(`the technology with the ID ${techId} was not found.`))
+
+      const response = {
+        data: model,
+        ok: true,
+        code: HttpStatus.OK,
+        message: 'updated technology successfully.',
+        url: req.url
+      }
+
+      res.status(response.code).json(this.response(response))
+    } catch (err) {
+      next(new InternalServerError('internal server error.'))
+    }
+  }
+
+  public async delete(req:Request, res:Response, next:NextFunction):Promise<void> {
+    const techId:string = req.query.techId as string
+
+    try {
+      if(!isValidObjectId(techId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param techId is not valid.'))
+
+      const model = await TechModel.findByIdAndDelete(techId, { new: true, useFindAndModify: false }).select('-__v')
+      if(!model) next(new NotFoundException(`the technology with the ID ${techId} was not found.`))
+
+      const response = {
+        data: model,
+        ok: true,
+        code: HttpStatus.OK,
+        message: 'deleted technology successfully.',
+        url: req.url
+      }
+
+      res.status(response.code).json(this.response(response))
+    } catch (err) {
+      next(new InternalServerError('internal server error.'))
+    }
+  }
 }
 
 export default new TechHandler

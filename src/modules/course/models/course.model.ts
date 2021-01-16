@@ -1,9 +1,7 @@
-import { model, Schema, Document } from 'mongoose'
+import { model, Schema } from 'mongoose'
 
 // Import interfaces
-import { ICourse } from '@common/interfaces'
-
-export interface ICourseModel extends ICourse, Document {}
+import { ICourseModel } from '@modules/course/interfaces/course.interface'
 
 const CourseSchema = new Schema({
   name: {

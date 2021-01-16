@@ -138,8 +138,8 @@ class NoteHandler extends AbstractHandler {
   }
 
   public async getById():Promise<void> {}
-  public async getAll():Promise<void>{}
   public async delete():Promise<void> {}
+  public async getAll():Promise<void>{}
 
 }
 

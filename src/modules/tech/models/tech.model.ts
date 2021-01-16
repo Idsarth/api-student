@@ -1,9 +1,7 @@
-import { model, Schema, Document } from 'mongoose'
+import { model, Schema } from 'mongoose'
 
 // Import interfaces
-import { ITechnology } from '@common/interfaces'
-
-interface ITechModel extends ITechnology, Document {}
+import { ITechModel } from '@modules/tech/interfaces/tech.interface'
 
 const TechSchema = new Schema({
   name: {
@@ -17,8 +15,7 @@ const TechSchema = new Schema({
   },
   docsUrl: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   isActive: {
     type: Boolean,
