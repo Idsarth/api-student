@@ -2,14 +2,16 @@
 import { IHandler } from '@common/interfaces'
 
 // Import handlers
-// import TechHandler from '../modules/tech/tech.handler'
-// import CourseHandler from '../modules/course/course.handler'
-// import TaskHandler from '../modules/task/task.handler'
+import TechHandler from '@modules/tech/tech.handler'
+import TaskHandler from '@modules/task/task.handler'
 import FileHandler from '@modules/file/file.handler'
+import NoteHandler from '@modules/note/note.handler'
+import CourseHandler from '@modules/course/course.handler'
 
 export const handlers: IHandler[] = [
-  // CourseHandler, 
-  // TaskHandler, 
-  // TechHandler,
-  FileHandler
+  TechHandler,
+  CourseHandler,
+  TaskHandler,
+  FileHandler,
+  NoteHandler,
 ]

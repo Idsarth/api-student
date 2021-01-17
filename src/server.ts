@@ -31,7 +31,7 @@ export class Server {
     this.app.use(urlencoded({ extended: true }))
     this.app.use(express.static(path.join(__dirname, './public')))
   }
-  
+
   private errHandler():void {
     this.app.use(ErrorMiddlew.error)
   }

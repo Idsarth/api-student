@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction, Router } from 'express'
-import { isValidObjectId, Types } from 'mongoose'
+import { Types, isValidObjectId } from 'mongoose'
 
 // Import handlers
 import { AbstractHandler } from '@handlers/abstract.handler'
 
 // Import middlews
-import { TokenMiddlew } from '@common/middlew'
+import { TokenMiddlew, ObjectIdMiddlew } from '@common/middlew'
 
 // Import enums
 import { HttpStatus } from '@common/enums'
@@ -31,17 +31,19 @@ class CourseHandler extends AbstractHandler {
   constructor() {
     super()
 
-    this.router.put(this.path, this.update.bind(this))
-    this.router.post(this.path, this.create.bind(this))
-    this.router.get(this.path, this.getById.bind(this))
-    this.router.patch(this.path, this.update.bind(this))
-    this.router.delete(this.path, this.delete.bind(this))
+    this.router.route(this.path)
+      .post(this.create)
+      .delete(this.delete)
+      .put(ObjectIdMiddlew.isValid('courseId'), this.update)
+      .get(ObjectIdMiddlew.isValid('courseId'), this.getById)
+      .patch(ObjectIdMiddlew.isValid('courseId'), this.update)
+
     this.router.get(`${this.path}s`, this.getAll.bind(this))
     this.router.post(`${this.path}/tech`, this.addCourseToTech.bind(this))
     this.router.get(`${this.path}/tech`, this.getCourseByTechId.bind(this))
   }
 
-  public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
+  public create = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
     const course:CreateCourseDto = req.body
 
     try {
@@ -55,7 +57,7 @@ class CourseHandler extends AbstractHandler {
         data: document,
         ok: true,
         code: HttpStatus.CREATED,
-        message: 'course created successfully.',
+        message: 'created course successfully.',
         url: req.url,
       }
       res.status(response.code).json(this.response(response))
@@ -64,45 +66,50 @@ class CourseHandler extends AbstractHandler {
     }
   }
 
-  public async getById(req:Request, res:Response, next:NextFunction):Promise<void> {
+  public getById = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
     const courseId:string = req.query.courseId as string
     try {
-      if(!isValidObjectId(courseId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param courseId is not valid.'))
-
       const course = await CourseModel
         .findById({ _id: Types.ObjectId(courseId)})
         .select('-__v')
-        .populate('tasks', '-__v')
 
       if(!course) next(new NotFoundException('course not found.'))
       const response = {
-        data: course,
         ok: true,
+        url: req.url,
+        data: course,
         code: HttpStatus.OK,
         message: 'course found successfully.',
-        url: req.url,
       }
       res.status(response.code).json(this.response(response))
     } catch (error) {
+      console.log(error)
       next(new InternalServerError('internal server error.'))
     }
   }
 
-  public async update(req:Request, res:Response, next:NextFunction):Promise<void> {
-    const courseId:string = req.query.courdeId as string
+  public update = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
+    const courseId:string = req.query.courseId as string
     const course:UpdateCourseDto = req.body
-    try {
-      if(!isValidObjectId((courseId))) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param courseId is not valid.'))
 
-      const model = await CourseModel.findByIdAndUpdate(courseId, { ...course, updatedAt: Date.now() }, { new: true, useFindAndModify: false })
+    try {
+      const model = await CourseModel
+        .findByIdAndUpdate(courseId, {
+          ...course,
+          updatedAt: Date.now()
+        }, {
+          new: true,
+          useFindAndModify: false
+        })
+        .select('-__v')
       if(!model) next(new NotFoundException(`the course with the ID ${courseId} was not found.`))
 
       const response = {
-        data: model,
         ok: true,
+        data: model,
+        url: req.url,
         code: HttpStatus.OK,
         message: 'updated course successfully.',
-        url: req.url
       }
       res.status(response.code).json(this.response(response))
     } catch (error) {

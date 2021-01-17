@@ -9,22 +9,21 @@ import { ResponseService } from '@common/services'
 class ErrorMiddlew {
   private response = ResponseService.response
 
-  public error(err:HttpException, req:Request, res:Response, next:NextFunction) {
+  public error = (err:HttpException, req:Request, res:Response, _:NextFunction):void => {
     const ok = false
-    const code = err.status
     const url = req.url
+    const code = err.status
     const message = err.message
 
     const response = {
-      data: {},
       ok,
+      url,
       code,
       message,
-      url,
+      data: {},
     }
-
-    res.status(code).json(this.response(response))
+    res.status(response.code).json(this.response(response))
   }
 }
 
-export default new ErrorMiddlew
+export default new ErrorMiddlew()
