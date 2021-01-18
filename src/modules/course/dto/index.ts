@@ -1,2 +1,2 @@
-export { CreateCourseDto } from './create-course.dto'
-export { UpdateCourseDto } from './update-course.dto'
+export { CreateCourseDto } from '@modules/course/dto/create-course.dto'
+export { UpdateCourseDto } from '@modules/course/dto/update-course.dto'

@@ -1,30 +1,26 @@
 import { model, Schema } from 'mongoose'
 
 // Import interfaces
-import { ITechModel } from '@modules/tech/interfaces/tech.interface'
+import { ITopicModel } from '@modules/topic/interfaces/topic.interface'
 
-const TechSchema = new Schema({
+const TopicSchema = new Schema({
   name: {
     type: String,
     unique: true,
-    required: true,
+    required: true
   },
   imageUrl: {
     type: String,
-    required: true
-  },
-  docsUrl: {
-    type: String,
-    required: true
+    required: false,
   },
   isActive: {
     type: Boolean,
     required: true,
     default: true
   },
-  topics: [{
+  courses: [{
     type: Schema.Types.ObjectId,
-    ref: 'topic',
+    ref: 'course',
     unique: true
   }],
   updatedAt: {
@@ -37,4 +33,4 @@ const TechSchema = new Schema({
   }
 })
 
-export const TechnologyModel = model<ITechModel>('technology', TechSchema)
+export const TopicModel = model<ITopicModel>('topic', TopicSchema)

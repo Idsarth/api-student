@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express'
-import { isValidObjectId, Types } from 'mongoose'
+import { Types } from 'mongoose'
 
 // Import exceptions
 import { HttpException, InternalServerError, NotFoundException } from '@common/exceptions'

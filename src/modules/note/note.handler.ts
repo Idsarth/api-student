@@ -15,7 +15,7 @@ import { CreateNoteDto, UpdateNoteDto } from '@modules/note/dto'
 
 // Import model
 import { NoteModel } from '@modules/note/models/note.model'
-import { TaskModel } from '@modules/task/models/task.model'
+import { CourseModel } from '@modules/course/models/course.model'
 
 // Import exceptions
 import { InternalServerError, HttpException, NotFoundException } from '@common/exceptions'
@@ -47,7 +47,7 @@ class NoteHandler extends AbstractHandler {
       const model = await NoteModel.create({ ...note })
       const document = await model.save()
 
-      const task = await TaskModel.findByIdAndUpdate(taskId, { $push: { notes: Types.ObjectId(document._id) }}, { new: true, useFindAndModify: false })
+      const task = await CourseModel.findByIdAndUpdate(taskId, { $push: { notes: Types.ObjectId(document._id) }}, { new: true, useFindAndModify: false })
       if(!task) next(new NotFoundException(`the task with the ID ${taskId} was not found.`))
 
       const response = {
@@ -96,7 +96,7 @@ class NoteHandler extends AbstractHandler {
     try {
       if(!isValidObjectId(taskId) || !isValidObjectId(noteId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the params taskId or nodeId is not valid.'))
 
-      const task = await TaskModel.findByIdAndUpdate(taskId, { $push: { notes: Types.ObjectId(noteId) } }, { new: true, useFindAndModify: false})
+      const task = await CourseModel.findByIdAndUpdate(taskId, { $push: { notes: Types.ObjectId(noteId) } }, { new: true, useFindAndModify: false})
       if(!task) next(new NotFoundException(`the task with the ID ${taskId} was not found. `))
 
       const response = {
@@ -119,7 +119,7 @@ class NoteHandler extends AbstractHandler {
     try {
       if(!isValidObjectId(taskId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param taskId is not valid.'))
 
-      const notes = await TaskModel.findById(taskId).populate('notes').select('-__v')
+      const notes = await CourseModel.findById(taskId).populate('notes').select('-__v')
       if(!notes) next(new NotFoundException(`the task with the ID ${taskId} was not found.`))
 
       const response = {

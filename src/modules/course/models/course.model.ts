@@ -9,6 +9,10 @@ const CourseSchema = new Schema({
     unique: true,
     required: true
   },
+  description: {
+    type: String,
+    required: false,
+  },
   imageUrl: {
     type: String,
     required: false,
@@ -18,9 +22,29 @@ const CourseSchema = new Schema({
     required: true,
     default: true
   },
-  tasks: [{
+  completed: {
+    type: Boolean,
+    default: false,
+  },
+  status: {
+    type: String,
+    required: true,
+    default: 'PENDING',
+    enum: ['CURRENT', 'PENDING', 'COMPLETED']
+  },
+  platform: {
+    type: String,
+    required: true,
+    enum: ['PLATZI', 'UDEMY', 'EDTEAM', 'YOUTUBE'],
+  },
+  notes: [{
+    ref: 'note',
     type: Schema.Types.ObjectId,
-    ref: 'task',
+    unique: true
+  }],
+  files: [{
+    ref: 'file',
+    type: Schema.Types.ObjectId,
     unique: true
   }],
   updatedAt: {
