@@ -14,18 +14,22 @@ class ObjectIdMiddlew {
 
   public isValid = (idx: Array<string>|string): Handler => {
     return (req:Request, res:Response, next:NextFunction) => {
-      let isValid:boolean
       if(Array.isArray(idx)) {
-        isValid = idx.every((id:string) => this.isValidObjectId(req.query[id] as string))
+        for (let i of idx.values()){
+          if(!req.query[i]) {
+            return next(new HttpException(HttpStatus.BAD_REQUEST, `the parameter ${i} cannot be empty`))
+          }
+          if(!this.isValidObjectId(req.query[i] as string)) {
+            return next(new HttpException(HttpStatus.BAD_REQUEST, `the parameter ${i} is not a valid objectId.`))
+          }
+        }
       } else {
-        isValid = this.isValidObjectId(req.query[idx] as string)
-      }
-      if(!isValid) {
-        next(new HttpException(HttpStatus.BAD_REQUEST, 'the parameter is not a valid objectId.'))
+        if(!req.query[idx]) return next(new HttpException(HttpStatus.BAD_REQUEST, `the parameter ${idx} cannot be empty`))
+        if(!this.isValidObjectId(req.query[idx] as string)) return next(new HttpException(HttpStatus.BAD_REQUEST, `the parameter ${idx} is not a valid objectId.`))
       }
       next()
     }
   }
 }
 
-export  default  new ObjectIdMiddlew()
+export default new ObjectIdMiddlew()

@@ -7,8 +7,6 @@ export abstract class AbstractHandler implements IHandler {
   public abstract path:string
   public abstract router: Router
 
-  constructor() {}
-
   public abstract getAll(req:Request, res:Response, next:NextFunction):Promise<void>
   public abstract getById(req:Request, res:Response, next:NextFunction):Promise<void>
   public abstract create(req:Request, res:Response, next:NextFunction):Promise<void>

@@ -8,7 +8,7 @@ import { HttpException, InternalServerError, NotFoundException } from '@common/e
 import { AbstractHandler } from '@handlers/abstract.handler'
 
 // Import middlews
-import { TokenMiddlew } from '@common/middlew'
+import { ObjectIdMiddlew, TokenMiddlew } from '@common/middlew'
 
 // Import enums
 import { HttpStatus } from '@common/enums'
@@ -30,26 +30,31 @@ class TechHandler extends AbstractHandler {
   constructor() {
     super()
 
-    this.router.post(this.path, this.create.bind(this))
-    this.router.get(this.path, this.getById.bind(this))
-    this.router.get(`/technologies`, this.getAll.bind(this))
+    this.router.route(this.path)
+      .post(this.create)
+      .put(ObjectIdMiddlew.isValid('techId'), this.update)
+      .get(ObjectIdMiddlew.isValid('techId'), this.getById)
+      .patch(ObjectIdMiddlew.isValid('techId'), this.update)
+      .delete(ObjectIdMiddlew.isValid('techId'), this.delete)
+
+    this.router.get(`/technologies`, this.getAll)
   }
 
-  public async create(req:Request, res:Response, next:NextFunction):Promise<void> {
+  public create = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
     const tech:CreateTechDto = req.body
     try {
       const check = await TechModel.findOne({ name: tech.name })
-      if(check) next(new HttpException(HttpStatus.BAD_REQUEST, `the name property already exists and must be unique.`))
+      if(check) return next(new HttpException(HttpStatus.BAD_REQUEST, `the name property already exists and must be unique.`))
 
       const model = await TechModel.create({ ...tech })
       const document = await model.save()
 
       const response = {
-        data: document,
         ok: true,
+        url: req.url,
+        data: document,
         code: HttpStatus.CREATED,
         message: 'technology created successfully.',
-        url: req.url
       }
       res.status(response.code).json(this.response(response))
     } catch (error) {
@@ -57,16 +62,16 @@ class TechHandler extends AbstractHandler {
     }
   }
 
-  public async getAll(req: Request, res:Response, next:NextFunction):Promise<void> {
+  public getAll = async (req: Request, res:Response, next:NextFunction):Promise<void> => {
     try {
       const techs = await TechModel.find().select('-__v')
 
       const response = {
-        data: techs,
         ok: true,
+        data: techs,
+        url: req.url,
         code: HttpStatus.OK,
         message: 'list of technologies gated successfully.',
-        url: req.url,
       }
       res.status(response.code).json(this.response(response))
     } catch (error) {
@@ -74,18 +79,18 @@ class TechHandler extends AbstractHandler {
     }
   }
 
-  public async getById(req:Request, res:Response, next:NextFunction):Promise<void> {
+  public getById = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
     const techId:string = req.query.techId as string
     try {
-      if(!isValidObjectId(techId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param techId is not valid.'))
-
       const tech = await TechModel.findById({ _id: Types.ObjectId(techId) }).select('-__v')
+      if(!tech) return next(new NotFoundException(`the technology with the ID ${techId} was not found.`))
+
       const response = {
-        data: tech,
         ok: true,
+        data: tech,
+        url: req.url,
         code: HttpStatus.OK,
         message: 'tech found successfully',
-        url: req.url,
       }
       res.status(response.code).json(this.response(response))
     } catch (err) {
@@ -93,47 +98,51 @@ class TechHandler extends AbstractHandler {
     }
   }
 
-  public async update(req:Request, res:Response, next:NextFunction):Promise<void> {
+  public update = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
     const techId:string = req.query.techId as string
     const tech:UpdateTechDto = req.body
 
     try {
-      if(!isValidObjectId(techId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param techId is not valid.'))
+      const model = await TechModel
+        .findByIdAndUpdate(Types.ObjectId(techId), {
+          ...tech,
+          updatedAt: Date.now()
+        }, {
+          new: true,
+          useFindAndModify: false
+        })
+        .select('-__v')
 
-      const model = await TechModel.findByIdAndUpdate(techId, { ...tech, updatedAt: Date.now() }, { new: true, useFindAndModify: false }).select('-__v')
-      if(!model) next(new NotFoundException(`the technology with the ID ${techId} was not found.`))
-
+      if(!model) return next(new NotFoundException(`the technology with the ID ${techId} was not found.`))
       const response = {
-        data: model,
         ok: true,
+        data: model,
+        url: req.url,
         code: HttpStatus.OK,
         message: 'updated technology successfully.',
-        url: req.url
       }
-
       res.status(response.code).json(this.response(response))
     } catch (err) {
       next(new InternalServerError('internal server error.'))
     }
   }
 
-  public async delete(req:Request, res:Response, next:NextFunction):Promise<void> {
+  public delete = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
     const techId:string = req.query.techId as string
 
     try {
-      if(!isValidObjectId(techId)) next(new HttpException(HttpStatus.BAD_REQUEST, 'the param techId is not valid.'))
-
-      const model = await TechModel.findByIdAndDelete(techId, { new: true, useFindAndModify: false }).select('-__v')
-      if(!model) next(new NotFoundException(`the technology with the ID ${techId} was not found.`))
+      const model = await TechModel
+        .findByIdAndDelete(Types.ObjectId(techId))
+        .select('-__v')
+      if(!model) return next(new NotFoundException(`the technology with the ID ${techId} was not found.`))
 
       const response = {
-        data: model,
         ok: true,
+        data: model,
+        url: req.url,
         code: HttpStatus.OK,
         message: 'deleted technology successfully.',
-        url: req.url
       }
-
       res.status(response.code).json(this.response(response))
     } catch (err) {
       next(new InternalServerError('internal server error.'))

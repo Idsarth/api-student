@@ -20,7 +20,8 @@ const CourseSchema = new Schema({
   },
   tasks: [{
     type: Schema.Types.ObjectId,
-    ref: 'task'
+    ref: 'task',
+    unique: true
   }],
   updatedAt: {
     type: Date,
