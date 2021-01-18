@@ -69,7 +69,7 @@ class CourseHandler extends AbstractHandler {
     const courseId:string = req.query.courseId as string
     try {
       const course = await CourseModel.findById({ _id: Types.ObjectId(courseId) }).select('-__v')
-      if(!course) next(new NotFoundException(`course with ID ${courseId} was not found.`))
+      if(!course) return next(new NotFoundException(`course with ID ${courseId} was not found.`))
 
       const response = {
         ok: true,
@@ -106,8 +106,8 @@ class CourseHandler extends AbstractHandler {
     const course:UpdateCourseDto = req.body
 
     try {
-      const model = await CourseModel.findByIdAndUpdate(courseId, { ...course, updatedAt: Date.now() }, { new: true, useFindAndModify: false })
-      if(!model) next(new NotFoundException(`the course with the ID ${courseId} was not found.`))
+      const model = await CourseModel.findByIdAndUpdate(courseId, { ...course, updatedAt: Date.now() }, { new: true, useFindAndModify: false }).select('-__v')
+      if(!model) return next(new NotFoundException(`the course with the ID ${courseId} was not found.`))
 
       const response = {
         ok: true,
@@ -125,8 +125,8 @@ class CourseHandler extends AbstractHandler {
   public delete = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
     const courseId:string = req.query.courseId as string
     try {
-      const course = await CourseModel.findByIdAndDelete(courseId, { new: true })
-      if(!course) next(new NotFoundException(`the course with the ID ${courseId} was not found.`))
+      const course = await CourseModel.findByIdAndDelete(Types.ObjectId(courseId)).select('-__v')
+      if(!course) return next(new NotFoundException(`the course with the ID ${courseId} was not found.`))
 
       const response = {
         ok: true,
@@ -137,7 +137,6 @@ class CourseHandler extends AbstractHandler {
       }
 
       res.status(response.code).json(this.response(response))
-
     } catch (error) {
       next(new InternalServerError('internal server error'))
     }
@@ -147,8 +146,11 @@ class CourseHandler extends AbstractHandler {
     const topicId:string = req.query.topicId as string
 
     try {
-      const courses = await TopicModel.findById(Types.ObjectId(topicId)).populate('courses').select('-__v')
-      if(!courses) next(new NotFoundException(`the topic with the ID ${topicId} was not found.`))
+      const courses = await TopicModel
+        .findById(Types.ObjectId(topicId))
+        .populate('courses', '-__v')
+        .select('-__v')
+      if(!courses) return next(new NotFoundException(`the topic with the ID ${topicId} was not found.`))
 
       const response = {
         ok: true,
@@ -194,7 +196,7 @@ class CourseHandler extends AbstractHandler {
     }
   }
 
-  public async addCourseToTopic(req:Request, res:Response, next:NextFunction):Promise<void> {
+  public addCourseToTopic = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
     const courseId:string = req.query.courseId as string
     const topicId:string = req.query.topicId as string
 
@@ -210,7 +212,7 @@ class CourseHandler extends AbstractHandler {
         })
         .select('-__v')
 
-      if(!topic) next(new NotFoundException(`the topic with the ID ${topicId} was not found.`))
+      if(!topic) return next(new NotFoundException(`the topic with the ID ${topicId} was not found.`))
       const response = {
         ok: true,
         data: topic,
@@ -219,7 +221,7 @@ class CourseHandler extends AbstractHandler {
         message: `the course was assigned to topic ${topic?.name}`,
       }
       res.status(HttpStatus.OK).json(this.response(response))
-    } catch (error) {
+    } catch (err) {
       next(new InternalServerError('internal server error.'))
     }
   }

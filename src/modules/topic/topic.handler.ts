@@ -163,13 +163,14 @@ class TopicHandler extends AbstractHandler {
       const tech = await TechModel.findByIdAndUpdate(techId,
       {
         $push: {
-          courses: Types.ObjectId(topicId)
+          topics: Types.ObjectId(topicId)
         },
         updatedAt: Date.now()
       }, {
         new: true,
         useFindAndModify: false
       })
+      .select('-__v')
 
       if(!tech) return next(new NotFoundException(`the technology with the ID ${techId} was not found.`))
       const response = {
@@ -189,11 +190,11 @@ class TopicHandler extends AbstractHandler {
     const techId:string = req.query.techId as string
     try {
       const topics = await TechModel
-        .findById(techId)
+        .findById(Types.ObjectId(techId))
         .populate('topics', '-__v')
         .select('-__v')
 
-      if(!topics) next(new NotFoundException(`the tech with the ID ${techId} was not found.`))
+      if(!topics) return next(new NotFoundException(`the technology with the ID ${techId} was not found.`))
       const response = {
         ok: true,
         url: req.url,
