@@ -4,7 +4,7 @@ import mongoose, { ConnectOptions } from 'mongoose'
 import { LogMiddlew as Log } from '../../../common/middlew'
 
 // Import variables
-import { 
+import {
   MONGO_DATABASE,
   MONGO_HOST,
   MONGO_PASSWORD,
@@ -13,8 +13,8 @@ import {
 } from '../../../env'
 
 export class Mongoose {
-  private URI:string
-  private options:ConnectOptions
+  private readonly URI:string
+  private readonly options:ConnectOptions
 
   constructor() {
     this.URI = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_HOST}/${MONGO_DATABASE}?retryWrites=true&w=majority`

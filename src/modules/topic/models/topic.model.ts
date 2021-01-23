@@ -20,8 +20,7 @@ const TopicSchema = new Schema({
   },
   courses: [{
     type: Schema.Types.ObjectId,
-    ref: 'course',
-    unique: true
+    ref: 'course'
   }],
   updatedAt: {
     type: Date,

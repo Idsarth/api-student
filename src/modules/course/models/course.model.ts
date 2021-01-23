@@ -40,12 +40,10 @@ const CourseSchema = new Schema({
   notes: [{
     ref: 'note',
     type: Schema.Types.ObjectId,
-    unique: true
   }],
   files: [{
     ref: 'file',
     type: Schema.Types.ObjectId,
-    unique: true
   }],
   updatedAt: {
     type: Date,

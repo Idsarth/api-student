@@ -24,8 +24,7 @@ const TechSchema = new Schema({
   },
   topics: [{
     type: Schema.Types.ObjectId,
-    ref: 'topic',
-    unique: true
+    ref: 'topic'
   }],
   updatedAt: {
     type: Date,

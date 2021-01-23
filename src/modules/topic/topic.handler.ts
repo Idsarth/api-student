@@ -33,10 +33,10 @@ class TopicHandler extends AbstractHandler {
 
     this.router.route(this.path)
       .post(this.create)
-      .delete(ObjectIdMiddlew.isValid('topicId'), this.delete)
       .put(ObjectIdMiddlew.isValid('topicId'), this.update)
       .get(ObjectIdMiddlew.isValid('topicId'), this.getById)
       .patch(ObjectIdMiddlew.isValid('topicId'), this.update)
+      .delete(ObjectIdMiddlew.isValid('topicId'), this.delete)
 
     this.router.get(`${this.path}s`, this.getAll)
     this.router.post(`${this.path}/tech`, ObjectIdMiddlew.isValid(['techId', 'topicId']), this.addTopicToTech)
@@ -67,12 +67,11 @@ class TopicHandler extends AbstractHandler {
   }
 
   public getById = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
-    const topicId:string = req.query.courseId as string
+    const topicId:string = req.query.topicId as string
     try {
       const topic = await TopicModel
         .findById(Types.ObjectId(topicId))
         .select('-__v')
-
       if(!topic) return next(new NotFoundException(`the topic with the Id ${topicId} was not found.`))
 
       const response = {

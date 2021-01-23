@@ -58,6 +58,7 @@ class TechHandler extends AbstractHandler {
       }
       res.status(response.code).json(this.response(response))
     } catch (error) {
+      console.log(error)
       next(new InternalServerError('internal server error.'))
     }
   }
